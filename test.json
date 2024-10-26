@@ -1,0 +1,214 @@
+[
+    {
+      "conversation_id": "conv-12345",
+      "participant": "Jane Smith",
+      "messages": [
+        {
+          "sender": "you",
+          "content": "Hi Jane!",
+          "timestamp": "2023-10-26T10:00:00Z"
+        },
+        {
+          "sender": "Jane Smith",
+          "content": "Hello! How's it going?",
+          "timestamp": "2023-10-26T10:05:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Pretty good, just working on a new project. What about you?",
+          "timestamp": "2023-10-26T10:10:00Z"
+        },
+        {
+          "sender": "Jane Smith",
+          "content": "Same here! Just busy with work.",
+          "timestamp": "2023-10-26T10:12:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "We should catch up sometime soon.",
+          "timestamp": "2023-10-26T10:15:00Z"
+        },
+        {
+          "sender": "Jane Smith",
+          "content": "Definitely! Let me know when you're free.",
+          "timestamp": "2023-10-26T10:20:00Z"
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv-67890",
+      "participant": "Bob Johnson",
+      "messages": [
+        {
+          "sender": "Bob Johnson",
+          "content": "Hey, are we still on for the meeting?",
+          "timestamp": "2023-10-26T11:00:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Yes, see you at 2 PM.",
+          "timestamp": "2023-10-26T11:05:00Z"
+        },
+        {
+          "sender": "Bob Johnson",
+          "content": "Great! By the way, did you review the report?",
+          "timestamp": "2023-10-26T11:10:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Yes, I made some notes. Will go over them with you.",
+          "timestamp": "2023-10-26T11:15:00Z"
+        },
+        {
+          "sender": "Bob Johnson",
+          "content": "Perfect, thanks! I think it’ll be a productive session.",
+          "timestamp": "2023-10-26T11:20:00Z"
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv-13579",
+      "participant": "Alice Williams",
+      "messages": [
+        {
+          "sender": "you",
+          "content": "Hey Alice! Long time no see!",
+          "timestamp": "2023-10-25T14:00:00Z"
+        },
+        {
+          "sender": "Alice Williams",
+          "content": "Hey! I know, it's been forever!",
+          "timestamp": "2023-10-25T14:05:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "How have you been?",
+          "timestamp": "2023-10-25T14:10:00Z"
+        },
+        {
+          "sender": "Alice Williams",
+          "content": "Pretty good! Just got back from a trip.",
+          "timestamp": "2023-10-25T14:15:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Oh, that sounds amazing! Where did you go?",
+          "timestamp": "2023-10-25T14:20:00Z"
+        },
+        {
+          "sender": "Alice Williams",
+          "content": "I was in Japan! It was incredible.",
+          "timestamp": "2023-10-25T14:25:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "That’s awesome! I’d love to hear all about it sometime.",
+          "timestamp": "2023-10-25T14:30:00Z"
+        },
+        {
+          "sender": "Alice Williams",
+          "content": "For sure! Let's grab coffee soon.",
+          "timestamp": "2023-10-25T14:35:00Z"
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv-24680",
+      "participant": "Charlie Brown",
+      "messages": [
+        {
+          "sender": "Charlie Brown",
+          "content": "Did you watch the game last night?",
+          "timestamp": "2023-10-26T18:00:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Yes! What a match!",
+          "timestamp": "2023-10-26T18:05:00Z"
+        },
+        {
+          "sender": "Charlie Brown",
+          "content": "I couldn't believe that last goal!",
+          "timestamp": "2023-10-26T18:10:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Same here. Such a dramatic finish.",
+          "timestamp": "2023-10-26T18:15:00Z"
+        },
+        {
+          "sender": "Charlie Brown",
+          "content": "We should watch the next one together.",
+          "timestamp": "2023-10-26T18:20:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Absolutely! Let’s plan for it.",
+          "timestamp": "2023-10-26T18:25:00Z"
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv-97531",
+      "participant": "Emma Green",
+      "messages": [
+        {
+          "sender": "Emma Green",
+          "content": "Just sent you the documents.",
+          "timestamp": "2023-10-26T09:00:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Got them. I'll review and get back to you.",
+          "timestamp": "2023-10-26T09:05:00Z"
+        },
+        {
+          "sender": "Emma Green",
+          "content": "Thanks! Let me know if you have any questions.",
+          "timestamp": "2023-10-26T09:10:00Z"
+        },
+        {
+          "sender": "you",
+          "content": "Will do. Appreciate your help with this.",
+          "timestamp": "2023-10-26T09:15:00Z"
+        },
+        {
+          "sender": "Emma Green",
+          "content": "No problem at all!",
+          "timestamp": "2023-10-26T09:20:00Z"
+        }
+      ]
+    },
+    {
+        "conversation_id": "conv-975312",
+        "participant": "Ishaan",
+        "messages": [
+          {
+            "sender": "Ishaan",
+            "content": "Just sent you the documents.",
+            "timestamp": "2023-10-26T09:00:00Z"
+          },
+          {
+            "sender": "you",
+            "content": "Got them. I'll review and get back to you.",
+            "timestamp": "2023-10-26T09:05:00Z"
+          },
+          {
+            "sender": "Ishaan",
+            "content": "Thanks! Let me know if you have any questions.",
+            "timestamp": "2023-10-26T09:10:00Z"
+          },
+          {
+            "sender": "you",
+            "content": "Will do. Appreciate your help with this.",
+            "timestamp": "2023-10-26T09:15:00Z"
+          },
+          {
+            "sender": "Ishaan",
+            "content": "No problem at all!",
+            "timestamp": "2023-10-26T09:20:00Z"
+          }
+        ]
+    }
+  ]
+  
