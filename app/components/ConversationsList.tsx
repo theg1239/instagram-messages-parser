@@ -21,13 +21,15 @@ const ConversationsList: React.FC<ConversationsListProps> = ({ conversations, on
         <ul className="space-y-2">
           {conversations.map((conversation, index) => {
             const lastMessage = conversation.messages[conversation.messages.length - 1] || null
-            const isSelected = selectedConversation?.title === conversation.title
+            const isSelected = selectedConversation?.thread_path === conversation.thread_path
             const participant = conversation.participants.find(p => p.name.toLowerCase() !== 'you')?.name || "Unknown"
 
             return (
               <li
-                key={index}
-                className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-200 ${isSelected ? 'bg-gray-100' : ''}`}
+                key={conversation.thread_path || index}
+                className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                  isSelected ? 'bg-gray-200 dark:bg-gray-700' : ''
+                } transition-colors duration-200`}
                 onClick={() => onSelectConversation(conversation)}
               >
                 <Avatar className="w-14 h-14 mr-3">
@@ -35,15 +37,15 @@ const ConversationsList: React.FC<ConversationsListProps> = ({ conversations, on
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-baseline">
-                    <p className="text-sm font-semibold text-gray-900 truncate">{participant}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">{participant}</p>
                     {lastMessage && (
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
                         {new Date(lastMessage.timestamp_ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                       </span>
                     )}
                   </div>
                   {lastMessage && (
-                    <p className="text-sm text-gray-500 truncate">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                       {lastMessage.sender_name.toLowerCase() === 'you' ? 'You: ' : ''}
                       {lastMessage.content || `[${lastMessage.type} message]`}
                     </p>

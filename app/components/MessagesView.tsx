@@ -39,6 +39,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, participant }) =>
 
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return
+    // Implement message sending logic here
     console.log('Sending message:', newMessage)
     setNewMessage('')
   }
@@ -74,6 +75,32 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, participant }) =>
                   />
                 </button>
               </div>
+              {/* Display Photos */}
+              {message.photos && message.photos.length > 0 && (
+                <div className={`mt-2 ml-2 ${isYou ? 'order-1 mr-2' : 'ml-2'}`}>
+                  {message.photos.map((photo, photoIndex) => (
+                    <img
+                      key={photoIndex}
+                      src={photo.uri}
+                      alt={`Photo ${photoIndex + 1}`}
+                      className="w-32 h-32 object-cover rounded-md mb-2"
+                    />
+                  ))}
+                </div>
+              )}
+              {/* Display Videos */}
+              {message.videos && message.videos.length > 0 && (
+                <div className={`mt-2 ml-2 ${isYou ? 'order-1 mr-2' : 'ml-2'}`}>
+                  {message.videos.map((video, videoIndex) => (
+                    <video
+                      key={videoIndex}
+                      controls
+                      src={video.uri}
+                      className="w-32 h-32 object-cover rounded-md mb-2"
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )
         })}
