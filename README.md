@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <h3 align="center">Instagram Messages Parser</h3>
+  <p align="center">
+    A project for parsing and displaying Instagram messages from a data export ZIP file, allowing users to view conversations, media, and other message details in a user-friendly format.
+    <br />
+    <br />
+  </p>
+</p>
 
-## Getting Started
+---
 
-First, run the development server:
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#about">About</a></li>
+    <li><a href="#built-with">Built With</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+  </ol>
+</details>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Instagram Messages Parser is a web-based project designed to process and display Instagram message exports. The project reads exported JSON files, decodes Unicode strings, and presents conversations with support for images, videos, and emojis. The goal is to make it easy for users to browse and interact with their Instagram messages offline and in a format that is comparable to the Instagram website. 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Features
 
-## Learn More
+- **Message Parsing**: Parses messages from JSON, including text, photos, videos, and audio files.
+- **Emoji and Unicode Decoding**: Ensures all Unicode characters and emojis display properly.
+- **Media Display**: Loads images, videos, and audio files from the data export.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Built With
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- <text> <a href="https://reactjs.org/">React</a></text> - Frontend library for UI components.
+- <text> <a href="https://nextjs.org/">Next.js</a></text> - Framework for server-side rendering and API handling.
+- <text> <a href="https://tailwindcss.com/">Tailwind CSS</a></text> - CSS framework for responsive styling.
+- <text> <a href="https://github.com/admzip/adm-zip">ADM-ZIP</a></text> - Node.js library for reading ZIP files.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Setup the project locally:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/instagram-messages-parser
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+
+3. Start the dev server:
+
+    ```bash
+    npm run dev
+
+### Parsing Instagram Messages:
+
+1. Go to Instagram settings and download your data export in the JSON format. You can choose to only download messages.
+
+2. Once you download the exported data, extract the ZIP file content and find the "inbox" folder, compress the inbox folder to a ZIP file and upload it to the dev server.
+
+3. The website will parse JSON files and extract conversations, displaying each message along with media files if present.
+
+## Contributing
+
+Contributions are welcome! If you have suggestions or bug fixes, please open a pull request. All contributions will be reviewed and merged if they improve the project’s functionality or structure.
+
