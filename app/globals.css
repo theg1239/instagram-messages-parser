@@ -19,7 +19,6 @@
   border: 2px solid #f1f1f1;
 }
 
-/* Gradient Text Utility */
 .text-gradient {
   background: linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
@@ -46,4 +45,8 @@ body {
 
 button, input, textarea {
   @apply bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100;
+}
+
+body {
+  font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI', sans-serif;
 }

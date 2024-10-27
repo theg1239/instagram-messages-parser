@@ -7,7 +7,7 @@ import { Conversation } from '../types'
 
 interface UploadFormProps {
   onUploadSuccess: (conversations: Conversation[]) => void
-  addDebugLog: (message: string) => void // New prop for logging
+  addDebugLog: (message: string) => void
 }
 
 const UploadForm: React.FC<UploadFormProps> = ({ onUploadSuccess, addDebugLog }) => {
@@ -24,39 +24,42 @@ const UploadForm: React.FC<UploadFormProps> = ({ onUploadSuccess, addDebugLog })
     e.preventDefault()
 
     if (!selectedFiles || selectedFiles.length === 0) {
-      const errorMsg = 'Please select at least one JSON file.'
+      const errorMsg = 'Please select at least one ZIP file.'
       setError(errorMsg)
       addDebugLog(errorMsg)
       return
     }
 
+    const file = selectedFiles[0]
+    if (!file.name.endsWith('.zip')) {
+      const errorMsg = 'Please upload a valid ZIP file.'
+      setError(errorMsg)
+      addDebugLog(errorMsg)
+      return
+    }
+
+    addDebugLog(`Uploading ${file.name} as ZIP file.`)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
     try {
-      addDebugLog(`Attempting to upload ${selectedFiles.length} file(s).`)
-      const conversations: Conversation[] = []
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
 
-      for (const file of Array.from(selectedFiles)) {
-        addDebugLog(`Processing file: ${file.name}`)
-        const text = await file.text()
-        const data = JSON.parse(text)
-
-        // Example validation log
-        if (Array.isArray(data)) {
-          addDebugLog(`File ${file.name} parsed successfully.`)
-          conversations.push(...data)
-        } else {
-          const errorMsg = `File ${file.name} does not match the expected structure.`
-          setError(errorMsg)
-          addDebugLog(errorMsg)
-          return
-        }
+      const result = await response.json()
+      if (response.ok) {
+        onUploadSuccess(result.conversations)
+        addDebugLog('Conversations uploaded successfully.')
+      } else {
+        const errorMsg = result.error || 'Failed to upload ZIP file.'
+        setError(errorMsg)
+        addDebugLog(errorMsg)
       }
-
-      onUploadSuccess(conversations)
-      setSelectedFiles(null)
-      ;(document.getElementById('fileInput') as HTMLInputElement).value = ''
-    } catch (err) {
-      console.error('Parse error:', err)
-      const errorMsg = 'An error occurred while parsing the JSON file(s).'
+    } catch (error) {
+      const errorMsg = 'An error occurred during the upload.'
       setError(errorMsg)
       addDebugLog(errorMsg)
     }
@@ -73,13 +76,12 @@ const UploadForm: React.FC<UploadFormProps> = ({ onUploadSuccess, addDebugLog })
         <input
           id="fileInput"
           type="file"
-          accept=".json"
-          multiple
+          accept=".zip"
           className="hidden"
           onChange={handleFileChange}
         />
         <p className="text-sm text-gray-500 mt-2 text-center">
-          Upload Instagram DMs JSON
+          Upload Instagram DMs ZIP File
         </p>
 
         {selectedFiles && (
@@ -97,7 +99,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ onUploadSuccess, addDebugLog })
           disabled={!selectedFiles}
           className="mt-4 w-full max-w-xs"
         >
-          Parse JSON
+          Parse ZIP
         </Button>
       </form>
     </div>

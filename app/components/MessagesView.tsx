@@ -6,17 +6,18 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ScrollArea } from "../components/ui/scroll-area"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
-import { Send, Heart } from 'lucide-react'
+import { Send } from 'lucide-react'
 import { Message } from '../types'
+import LazyLoad from 'react-lazyload'
+import { decodeUnicode } from '../../lib/decodeUnicode'
 
 interface MessagesViewProps {
   messages: Message[]
-  participant: string
+  yourName: string
 }
 
-const MessagesView: React.FC<MessagesViewProps> = ({ messages, participant }) => {
+const MessagesView: React.FC<MessagesViewProps> = ({ messages, yourName }) => {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const [likedMessages, setLikedMessages] = useState<Set<number>>(new Set())
   const [newMessage, setNewMessage] = useState<string>('')
 
   useEffect(() => {
@@ -25,23 +26,30 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, participant }) =>
     }
   }, [messages])
 
-  const toggleLike = (index: number) => {
-    setLikedMessages(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(index)) {
-        newSet.delete(index)
-      } else {
-        newSet.add(index)
-      }
-      return newSet
-    })
-  }
-
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return
-    // Implement message sending logic here
     console.log('Sending message:', newMessage)
     setNewMessage('')
+  }
+
+  // Expanded function to identify reaction messages and filter them out
+  const isReactionMessage = (content: string | undefined): boolean => {
+    if (!content) return false
+
+    // Decode Unicode for accurate comparison
+    const decodedContent = decodeUnicode(content)
+
+    // Identify reaction messages, accounting for different languages or phrases
+    const reactionPattern = /(liked|reacted|ಸಂದೇಶವನ್ನು\s+ಇಷ್ಟಪಟ್ಟಿದ್ದಾರೆ)/i
+    return reactionPattern.test(decodedContent)
+  }
+
+  // Filter out messages that match the reaction pattern
+  const filteredMessages = messages.filter(message => !isReactionMessage(message.content))
+
+  const isConsecutiveMessage = (index: number) => {
+    if (index === 0) return false
+    return filteredMessages[index].sender_name === filteredMessages[index - 1].sender_name
   }
 
   return (
@@ -50,61 +58,77 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, participant }) =>
         className="flex-1 p-4 bg-gray-100 dark:bg-gray-800 rounded-md shadow-md overflow-y-auto"
         ref={scrollAreaRef}
       >
-        {messages.map((message, index) => {
-          const isYou = message.sender_name.toLowerCase() === 'you'
-          const isLiked = likedMessages.has(index)
-          return (
-            <div key={index} className={`mb-4 flex ${isYou ? 'justify-end' : 'justify-start'}`}>
-              <div className={`relative max-w-xs px-4 py-2 rounded-3xl ${
-                isYou
-                  ? 'bg-gradient-to-tr from-blue-500 to-purple-600 text-white dark:from-blue-700 dark:to-purple-700'
-                  : 'bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-              }`}>
-                <p className="text-sm">
-                  {message.content || `[${message.type} message]`}
-                </p>
-                <span className="text-xs text-right block mt-1 text-gray-600 dark:text-gray-400">
-                  {new Date(message.timestamp_ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-                <button
-                  className="absolute -bottom-2 -right-2 focus:outline-none"
-                  onClick={() => toggleLike(index)}
-                >
-                  <Heart
-                    className={`w-5 h-5 ${isLiked ? 'text-pink-500 fill-current' : 'text-gray-500 dark:text-gray-400'}`}
-                  />
-                </button>
+        {filteredMessages.length === 0 ? (
+          <div className="text-gray-500 dark:text-gray-400 text-center">No messages available</div>
+        ) : (
+          filteredMessages.map((message, index) => {
+            const isYou = message.sender_name.toLowerCase() === yourName.toLowerCase()
+            const displaySenderName = !isConsecutiveMessage(index)
+
+            return (
+              <div key={index} className={`mb-2 ${displaySenderName ? 'mt-4' : ''}`}>
+                {displaySenderName && (
+                  <p className={`text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 ${isYou ? 'text-right' : 'text-left'}`}>
+                    {message.sender_name}
+                  </p>
+                )}
+                <div className={`flex ${isYou ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`relative max-w-xs px-4 py-2 rounded-3xl ${
+                    isYou
+                      ? 'bg-gradient-to-tr from-blue-500 to-purple-600 text-white dark:from-blue-700 dark:to-purple-700'
+                      : 'bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                  } ${isConsecutiveMessage(index) ? 'mt-1' : 'mt-2'}`}>
+                    
+                    <p className="text-sm break-words">
+                      {decodeUnicode(message.content || `[${message.type} message]`)}
+                    </p>
+
+                    {/* Display Photos */}
+                    {message.photos && message.photos.length > 0 && (
+                      <div className="mt-2">
+                        {message.photos.map((photo, photoIndex) => (
+                          <LazyLoad key={photoIndex} height={192} offset={100} once>
+                            <img
+                              src={photo.uri}
+                              alt={`Photo ${photoIndex + 1}`}
+                              className="w-48 h-48 object-cover rounded-md mb-2"
+                              onError={(e) => (e.target as HTMLImageElement).src = '/placeholder-image.png'} 
+                            />
+                          </LazyLoad>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Display Videos */}
+                    {message.videos && message.videos.length > 0 && (
+                      <div className="mt-2">
+                        {message.videos.map((video, videoIndex) => (
+                          <LazyLoad key={videoIndex} height={192} offset={100} once>
+                            <video
+                              controls
+                              src={video.uri}
+                              className="w-48 h-48 object-cover rounded-md mb-2"
+                              onError={(e) => {
+                                console.warn(`Video failed to load: ${video.uri}`)
+                              }}
+                            />
+                          </LazyLoad>
+                        ))}
+                      </div>
+                    )}
+
+                    <span className="text-xs text-gray-600 mt-1 block">
+                      {new Date(message.timestamp_ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                </div>
               </div>
-              {/* Display Photos */}
-              {message.photos && message.photos.length > 0 && (
-                <div className={`mt-2 ml-2 ${isYou ? 'order-1 mr-2' : 'ml-2'}`}>
-                  {message.photos.map((photo, photoIndex) => (
-                    <img
-                      key={photoIndex}
-                      src={photo.uri}
-                      alt={`Photo ${photoIndex + 1}`}
-                      className="w-32 h-32 object-cover rounded-md mb-2"
-                    />
-                  ))}
-                </div>
-              )}
-              {/* Display Videos */}
-              {message.videos && message.videos.length > 0 && (
-                <div className={`mt-2 ml-2 ${isYou ? 'order-1 mr-2' : 'ml-2'}`}>
-                  {message.videos.map((video, videoIndex) => (
-                    <video
-                      key={videoIndex}
-                      controls
-                      src={video.uri}
-                      className="w-32 h-32 object-cover rounded-md mb-2"
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )
-        })}
+            )
+          })
+        )}
       </ScrollArea>
+
+      {/* Input area for new messages */}
       <div className="p-4 border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
         <div className="flex items-center">
           <Input
