@@ -1,3 +1,5 @@
+// app/components/UploadForm.tsx
+
 'use client'
 
 import React, { useState } from 'react'
@@ -49,14 +51,25 @@ const UploadForm: React.FC<UploadFormProps> = ({ onUploadSuccess, addDebugLog })
         body: formData,
       })
 
-      const result = await response.json()
-      if (response.ok) {
-        onUploadSuccess(result.conversations)
-        addDebugLog('Conversations uploaded successfully.')
-      } else {
-        const errorMsg = result.error || 'Failed to upload ZIP file.'
-        setError(errorMsg)
-        addDebugLog(errorMsg)
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
+      let done = false
+      let partialData = ''
+
+      while (reader && !done) {
+        const { value, done: doneReading } = await reader.read()
+        done = doneReading
+        if (value) {
+          partialData += decoder.decode(value)
+          try {
+            const parsed = JSON.parse(partialData)
+            if (parsed.conversations) {
+              onUploadSuccess(parsed.conversations)
+              addDebugLog('Conversations uploaded successfully.')
+              partialData = ''
+            }
+          } catch {}
+        }
       }
     } catch (error) {
       const errorMsg = 'An error occurred during the upload.'
@@ -69,7 +82,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ onUploadSuccess, addDebugLog })
     <div className="w-full">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <label htmlFor="fileInput" className="cursor-pointer">
-          <div className="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+          <div className="flex items-center justify-center w-12 h-12 bg-blue-500 dark:bg-blue-700 rounded-full">
             <Upload className="w-6 h-6 text-white" />
           </div>
         </label>
@@ -80,13 +93,13 @@ const UploadForm: React.FC<UploadFormProps> = ({ onUploadSuccess, addDebugLog })
           className="hidden"
           onChange={handleFileChange}
         />
-        <p className="text-sm text-gray-500 mt-2 text-center">
+        <p className="text-sm text-gray-500 mt-2 text-center dark:text-gray-400">
           Upload Instagram DMs ZIP File
         </p>
 
         {selectedFiles && (
           <div className="mt-2 w-full text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               {Array.from(selectedFiles).length} file(s) selected
             </p>
           </div>

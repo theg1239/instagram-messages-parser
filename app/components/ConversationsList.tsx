@@ -22,29 +22,24 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
   yourName
 }) => {
 
-  // Helper function to identify reaction messages
   const isReactionMessage = (content: string | undefined): boolean => {
     if (!content) return false
 
-    // Decode Unicode for accurate comparison
     const decodedContent = decodeUnicode(content)
 
-    // Define a pattern to identify reaction messages
-    const reactionPattern = /(liked|reacted|ಸಂದೇಶವನ್ನು\s+ಇಷ್ಟಪಟ್ಟಿದ್ದಾರೆ)/i
+    const reactionPattern = /(liked this message|reacted to|ಸಂದೇಶವನ್ನು\s+ಇಷ್ಟಪಟ್ಟಿದ್ದಾರೆ|ನಿಮ್ಮ\s+ಸಂದೇಶದ\s+ಗೆ)/i
     return reactionPattern.test(decodedContent)
   }
 
   return (
-    <ScrollArea className="h-full">
+    <ScrollArea className="h-full scroll-area">
       <div className="px-4 py-2">
-        <h2 className="text-xl font-semibold mb-4">Messages</h2>
         <ul className="space-y-2">
           {conversations.map((conversation, index) => {
-            // Get the last non-reaction message by iterating backward
-            const lastMessage = conversation.messages?.slice().reverse().find(msg => !isReactionMessage(msg.content)) || null
+            const nonReactionMessages = conversation.messages.filter(msg => !isReactionMessage(msg.content))
+            const lastMessage = nonReactionMessages[nonReactionMessages.length - 1] || null
             const isSelected = selectedConversation?.thread_path === conversation.thread_path
 
-            // For the conversation name, prioritize the conversation title if it exists
             const conversationTitle = conversation.title
               ? decodeUnicode(conversation.title)
               : conversation.participants?.map(p => p.name).join(', ')
@@ -52,7 +47,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
             return (
               <li
                 key={conversation.thread_path || index}
-                className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
                   isSelected ? 'bg-gray-200 dark:bg-gray-700' : ''
                 } transition-colors duration-200`}
                 onClick={() => onSelectConversation(conversation)}
@@ -62,7 +57,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-baseline">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">
+                    <p className="text-sm font-semibold text-foreground dark:text-input-text truncate">
                       {conversationTitle}
                     </p>
                     {lastMessage && lastMessage.timestamp_ms && (
@@ -72,7 +67,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
                     )}
                   </div>
                   {lastMessage && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                    <p className="text-sm text-foreground dark:text-input-text truncate">
                       {lastMessage.sender_name.toLowerCase() === yourName.toLowerCase() ? 'You: ' : ''}
                       {decodeUnicode(lastMessage.content || `[${lastMessage.type || 'Unknown'} message]`)}
                     </p>

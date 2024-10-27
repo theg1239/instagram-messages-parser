@@ -10,8 +10,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        'background': 'var(--background)',
+        'foreground': 'var(--foreground)',
+        'input-bg': 'var(--input-bg)',
+        'input-text': 'var(--input-text)',
+        'box-border': 'var(--box-border)',
+        'scrollbar-track': 'var(--scrollbar-track)',
+        'scrollbar-thumb': 'var(--scrollbar-thumb)',
       },
     },
   },

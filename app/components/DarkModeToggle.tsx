@@ -3,41 +3,42 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Sun, Moon } from 'lucide-react'
 
 const DarkModeToggle: React.FC = () => {
-  // Declare state for dark mode
   const [isDarkMode, setIsDarkMode] = useState(false)
 
-  // Set initial dark mode based on localStorage or system preference
   useEffect(() => {
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark')
-      setIsDarkMode(true)
+    const root = window.document.documentElement
+    const initialDarkMode = root.classList.contains('dark') || 
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    setIsDarkMode(initialDarkMode)
+    if (initialDarkMode) {
+      root.classList.add('dark')
     } else {
-      document.documentElement.classList.remove('dark')
-      setIsDarkMode(false)
+      root.classList.remove('dark')
     }
   }, [])
 
-  // Function to toggle dark mode
   const toggleDarkMode = () => {
+    const root = window.document.documentElement
     if (isDarkMode) {
-      document.documentElement.classList.remove('dark')
+      root.classList.remove('dark')
       localStorage.theme = 'light'
     } else {
-      document.documentElement.classList.add('dark')
+      root.classList.add('dark')
       localStorage.theme = 'dark'
     }
-    setIsDarkMode(!isDarkMode) // Update the state
+    setIsDarkMode(!isDarkMode)
   }
 
   return (
     <button
       onClick={toggleDarkMode}
-      className="p-2 rounded-full transition-colors duration-300 hover:bg-gray-300 dark:hover:bg-gray-700"
+      className="p-2 rounded-full transition-colors duration-300 hover:bg-gray-300 dark:hover:bg-gray-700 focus:ring-2 focus:ring-blue-500"
       aria-label="Toggle dark mode"
     >
-      {isDarkMode ? '🌞' : '🌜'}
+      {isDarkMode ? <Sun className="text-yellow-500" /> : <Moon className="text-gray-500" />}
     </button>
   )
 }

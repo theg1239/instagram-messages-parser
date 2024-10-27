@@ -10,43 +10,84 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #c1c1c1;
+  background-color: var(--scrollbar-thumb);
   border-radius: 4px;
-  border: 2px solid #f1f1f1;
+  border: 2px solid var(--scrollbar-track);
 }
 
+/* Text Gradient */
 .text-gradient {
   background: linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Theme Colors */
 :root {
   --background: #ffffff;
   --foreground: #111111;
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+  --box-border: #e5e5e5;
+  --input-bg: #ffffff;
+  --input-text: #111111;
 }
 
 .dark {
-  --background: #111111;
-  --foreground: #ffffff;
+  --background: #121212;
+  --foreground: #e5e5e5;
+  --scrollbar-track: #333333;
+  --scrollbar-thumb: #555555;
+  --box-border: #444444;
+  --input-bg: #1e1e1e;
+  --input-text: #e5e5e5;
 }
 
 body {
   @apply bg-background text-foreground transition-colors duration-300;
+  font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI', sans-serif;
 }
 
+/* Define custom Tailwind classes under `@layer components` */
+@layer components {
+  .bg-input-bg {
+    background-color: var(--input-bg);
+  }
+  
+  .text-input-text {
+    color: var(--input-text);
+  }
+
+  .border-box-border {
+    border-color: var(--box-border);
+  }
+
+  /* Apply box borders to containers */
+  .container, .box, .card, .input {
+    @apply border border-box-border bg-background dark:bg-input-bg text-foreground dark:text-input-text rounded-md;
+  }
+}
+
+/* Header and Footer */
 .header, .footer {
-  @apply bg-gray-100 dark:bg-gray-800;
+  @apply bg-gray-100 dark:bg-gray-900 text-foreground;
+}
+
+/* ScrollArea Adjustments */
+.scroll-area {
+  @apply bg-background text-foreground dark:bg-background dark:text-foreground transition-colors duration-300;
+}
+
+/* Remove default outlines and use focus rings */
+button:focus, input:focus, textarea:focus {
+  outline: none;
+  @apply ring-2 ring-blue-500 ring-offset-2;
 }
 
 button, input, textarea {
-  @apply bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100;
-}
-
-body {
-  font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI', sans-serif;
+  @apply focus:outline-none;
 }

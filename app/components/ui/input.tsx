@@ -1,25 +1,27 @@
-import * as React from "react"
+// app/components/ui/input.tsx
 
-import { cn } from "@/lib/utils"
+'use client'
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+import React from 'react'
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
-    return (
-      <input
-        type={type}
-        className={cn(
-          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
-)
-Input.displayName = "Input"
+interface InputProps {
+  type?: string
+  placeholder?: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  className?: string
+}
 
-export { Input }
+export const Input: React.FC<InputProps> = ({ type = 'text', placeholder, value, onChange, onKeyDown, className }) => {
+  return (
+    <input
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      className={`p-2 border rounded-md focus:ring focus:ring-blue-500 ${className}`}
+    />
+  )
+}

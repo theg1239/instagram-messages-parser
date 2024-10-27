@@ -32,20 +32,15 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, yourName }) => {
     setNewMessage('')
   }
 
-  // Expanded function to identify reaction messages and filter them out
   const isReactionMessage = (content: string | undefined): boolean => {
     if (!content) return false
 
-    // Decode Unicode for accurate comparison
     const decodedContent = decodeUnicode(content)
-
-    // Identify reaction messages, accounting for different languages or phrases
-    const reactionPattern = /(liked|reacted|ಸಂದೇಶವನ್ನು\s+ಇಷ್ಟಪಟ್ಟಿದ್ದಾರೆ)/i
+    const reactionPattern = /(liked|reacted|ಸಂದೇಶವನ್ನು\s+ಇಷ್ಟಪಟ್ಟಿದ್ದಾರೆ|ನಿಮ್ಮ\s+ಸಂದೇಶದ\s+ಗೆ)/i
     return reactionPattern.test(decodedContent)
   }
 
-  // Filter out messages that match the reaction pattern
-  const filteredMessages = messages.filter(message => !isReactionMessage(message.content))
+  const filteredMessages = messages.filter(msg => !isReactionMessage(msg.content))
 
   const isConsecutiveMessage = (index: number) => {
     if (index === 0) return false
@@ -53,9 +48,9 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, yourName }) => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="flex flex-col h-full bg-background dark:bg-background transition-colors duration-300">
       <ScrollArea
-        className="flex-1 p-4 bg-gray-100 dark:bg-gray-800 rounded-md shadow-md overflow-y-auto"
+        className="flex-1 p-4 bg-scrollbar-track dark:bg-scrollbar-track rounded-md shadow-md overflow-y-auto"
         ref={scrollAreaRef}
       >
         {filteredMessages.length === 0 ? (
@@ -68,22 +63,21 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, yourName }) => {
             return (
               <div key={index} className={`mb-2 ${displaySenderName ? 'mt-4' : ''}`}>
                 {displaySenderName && (
-                  <p className={`text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 ${isYou ? 'text-right' : 'text-left'}`}>
-                    {message.sender_name}
-                  </p>
+                  <span className={`text-xs font-semibold text-input-text mb-1 ${isYou ? 'text-right block' : 'text-left block'}`}>
+                    {decodeUnicode(message.sender_name)}
+                  </span>
                 )}
                 <div className={`flex ${isYou ? 'justify-end' : 'justify-start'}`}>
                   <div className={`relative max-w-xs px-4 py-2 rounded-3xl ${
                     isYou
                       ? 'bg-gradient-to-tr from-blue-500 to-purple-600 text-white dark:from-blue-700 dark:to-purple-700'
-                      : 'bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                      : 'bg-gray-300 text-foreground dark:bg-gray-700 dark:text-input-text'
                   } ${isConsecutiveMessage(index) ? 'mt-1' : 'mt-2'}`}>
                     
                     <p className="text-sm break-words">
                       {decodeUnicode(message.content || `[${message.type} message]`)}
                     </p>
 
-                    {/* Display Photos */}
                     {message.photos && message.photos.length > 0 && (
                       <div className="mt-2">
                         {message.photos.map((photo, photoIndex) => (
@@ -99,7 +93,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, yourName }) => {
                       </div>
                     )}
 
-                    {/* Display Videos */}
                     {message.videos && message.videos.length > 0 && (
                       <div className="mt-2">
                         {message.videos.map((video, videoIndex) => (
@@ -128,11 +121,10 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, yourName }) => {
         )}
       </ScrollArea>
 
-      {/* Input area for new messages */}
-      <div className="p-4 border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+      <div className="p-4 border-t border-box-border bg-input-bg dark:bg-gray-800">
         <div className="flex items-center">
           <Input
-            className="flex-1 mr-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+            className="flex-1 mr-2 bg-input-bg text-input-text placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-md focus:ring focus:ring-blue-500"
             placeholder="Type a message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
@@ -145,7 +137,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({ messages, yourName }) => {
           <Button
             onClick={handleSendMessage}
             disabled={newMessage.trim() === ''}
-            className="flex items-center justify-center w-10 h-10 p-0 bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-600"
+            className="flex items-center justify-center w-10 h-10 p-0 bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-600 rounded-full focus:ring focus:ring-blue-500"
           >
             <Send className="w-4 h-4 text-white" />
             <span className="sr-only">Send message</span>
